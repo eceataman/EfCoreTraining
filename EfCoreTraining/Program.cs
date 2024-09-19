@@ -164,16 +164,143 @@ using System.Net.Mime;
 
 #endregion
 
+// IQueryable ve IEnumerable Nedir? Basit Olarak!
+
 ETicaretContext context = new();
 
 
+
+#region IQueryable
+// Sorguya karşılık gelir.
+// C# core üzerinden yapılmış olan sorgunun execute edilmemiş halini ifade eder.
+#endregion
+
+#region IEnumerable
+// Sorgunun çalıştırılıp/execute edilip verilerin in memory'e yüklenmiş halini ifade eder.
+#endregion
+
+
+
 #region method syntax
-var products = await context.Products.ToListAsync();
+//var products = await context.Products.ToListAsync();
 #endregion
 
 #region query syntax
-var product2= await (from product in  context.Products select product).ToListAsync();
+//var product2= await (from product in  context.Products select product).ToListAsync();
 #endregion
+
+#region Sorguyu Execute Etmek İçin Ne Yapmamız Gerekmektedir?
+// ToListAsync()
+
+//int Productid = 5;
+//string pName = "2";
+
+//var products = from product in context.Products
+//              where product.ProductId > Productid && product.ProductName.Contains(pName)
+//              select product;
+
+//Productid = 200;
+//pName = "3";
+
+//// Sorgu bu noktada execute edilir
+//foreach (var product in products)
+//{
+//    Console.WriteLine(product.ProductId);
+//}
+
+//await products.ToListAsync();
+#endregion
+
+#region Foreach
+// foreach (var urun in urunler)
+// {
+//    Console.WriteLine(urun.UrunId);
+// }
+#endregion
+
+#region Deferred Execution (Ertelenmiş Çalışma)
+// IQueryable çalışmasında ilgili kod yazıldığı noktada tetiklenmez/çalıştırılmaz yani
+// ilgili kod yazıldığı noktada sorguyu generate etmez. Nerede eder? Çalıştırıldığı/execute
+// edildiği noktada tetiklenir, işte bu durumda ertelenmiş çalışma denir.
+#endregion
+
+#region ToListAsynnc
+//üretilen sorguyu execute etmemize yarayan fonksiyondur. iquerayabledan ienumerable a geçmsini sağlar.
+
+#endregion
+
+#region where
+//oluşturulan sorguya where şartı atanır
+//var products=await context.Products.Where(u=>u.ProductId>500).ToListAsync();
+//var products2 = await context.Products.Where(u => u.ProductName.StartsWith("a")).ToListAsync();
+#endregion
+
+#region querysyntax
+//var products= from product in context.Products
+//              where product.ProductId > 500 && product.ProductName.EndsWith("7")
+//              select product;
+
+//var data = await products.ToListAsync();
+#endregion
+#region Çoğul Veri Getiren Sorgulama Fonksiyonları
+// ToListAsync()
+#endregion
+
+#region OrderBy
+// Sorgu üzerinde sıralama yapmamızı sağlayan bir fonksiyondur. (Ascending) artarak
+#endregion
+
+#region Method Syntax
+//var products = context.Products
+//    .Where(u => u.ProductId > 500 || u.ProductName.EndsWith("2"))
+//    .OrderBy(u => u.ProductName);
+#endregion
+
+#region Query Syntax
+//var products2 = from product in context.Products
+//               where product.ProductId > 500 || product.ProductName.StartsWith("2")
+//               orderby product.ProductName
+//               select product;
+#endregion
+
+#region ThenBy
+// orderby üzerinde yapılan ssıralama işlemlerini farklı kolonlara da uygulamamızı sğalar. (Ascending)
+var products = context.Products
+    .Where(u => u.ProductId > 500 || u.ProductName.EndsWith("2"))
+    .OrderBy(u => u.ProductName)       // Öncelikle UrunAdi'na göre sıralama
+    .ThenBy(u => u.Price)          // Ardından Fiyat'a göre sıralama
+    .ThenBy(u => u.ProductId);            // Son olarak Id'ye göre sıralama
+
+await products.ToListAsync();
+
+#endregion
+#region OrderByDescending
+// Descending olarak sıralama yapmamızı sağlayan bir fonksiyondur.
+#endregion
+
+#region Method Syntax
+var products = await context.Products
+    .OrderByDescending(u => u.Price)
+    .ToListAsync();
+#endregion
+
+#region Query Syntax
+var products = await (from product in context.Products
+                     orderby product.ProductName descending
+                     select product).ToListAsync();
+#endregion
+
+#region ThenByDescending
+// OrderByDescending üzerinde yapılan sıralama işlemini farklı kolonlarda uygulamamızı sağlayan bir fonksiyondur. (Ascending)
+
+var products = await context.Products
+    .OrderByDescending(u => u.ProductId)            // İlk olarak Id'ye göre azalan sırada sıralanır
+    .ThenByDescending(u => u.Price)          // Sonra Fiyat'a göre azalan sırada sıralanır
+    .ThenBy(u => u.ProductName)                  // En son UrunAdi'na göre artan sırada sıralanır
+    .ToListAsync();
+
+#endregion
+
 public class ETicaretContext : DbContext
 {
     public DbSet <Product> Products { get; set; }
