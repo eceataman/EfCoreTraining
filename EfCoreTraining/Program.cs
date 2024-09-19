@@ -157,11 +157,22 @@ using System.Net.Mime;
 #endregion
 
 #region Verileri daha verimli bir şekilde silme: RemoveRange kullanarak
-ETicaretContext context = new();
-List<Product> products= await context.Products.Where(u => u.ProductId >= 16 && u.ProductId <= 18).ToListAsync();
-context.Products.RemoveRange(products);
-await context.SaveChangesAsync();
+//ETicaretContext context = new();
+//List<Product> products= await context.Products.Where(u => u.ProductId >= 16 && u.ProductId <= 18).ToListAsync();
+//context.Products.RemoveRange(products);
+//await context.SaveChangesAsync();
 
+#endregion
+
+ETicaretContext context = new();
+
+
+#region method syntax
+var products = await context.Products.ToListAsync();
+#endregion
+
+#region query syntax
+var product2= await (from product in  context.Products select product).ToListAsync();
 #endregion
 public class ETicaretContext : DbContext
 {
