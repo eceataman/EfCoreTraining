@@ -265,13 +265,13 @@ ETicaretContext context = new();
 
 #region ThenBy
 // orderby üzerinde yapılan ssıralama işlemlerini farklı kolonlara da uygulamamızı sğalar. (Ascending)
-var products = context.Products
-    .Where(u => u.ProductId > 500 || u.ProductName.EndsWith("2"))
-    .OrderBy(u => u.ProductName)       // Öncelikle UrunAdi'na göre sıralama
-    .ThenBy(u => u.Price)          // Ardından Fiyat'a göre sıralama
-    .ThenBy(u => u.ProductId);            // Son olarak Id'ye göre sıralama
+//var products = context.Products
+//    .Where(u => u.ProductId > 500 || u.ProductName.EndsWith("2"))
+//    .OrderBy(u => u.ProductName)       // Öncelikle UrunAdi'na göre sıralama
+//    .ThenBy(u => u.Price)          // Ardından Fiyat'a göre sıralama
+//    .ThenBy(u => u.ProductId);            // Son olarak Id'ye göre sıralama
 
-await products.ToListAsync();
+//await products.ToListAsync();
 
 #endregion
 #region OrderByDescending
@@ -279,31 +279,143 @@ await products.ToListAsync();
 #endregion
 
 #region Method Syntax
-var products = await context.Products
-    .OrderByDescending(u => u.Price)
-    .ToListAsync();
+//var products = await context.Products
+//    .OrderByDescending(u => u.Price)
+//    .ToListAsync();
 #endregion
 
 #region Query Syntax
-var products = await (from product in context.Products
-                     orderby product.ProductName descending
-                     select product).ToListAsync();
+//var products = await (from product in context.Products
+//                     orderby product.ProductName descending
+//                     select product).ToListAsync();
 #endregion
 
 #region ThenByDescending
 // OrderByDescending üzerinde yapılan sıralama işlemini farklı kolonlarda uygulamamızı sağlayan bir fonksiyondur. (Ascending)
 
-var products = await context.Products
-    .OrderByDescending(u => u.ProductId)            // İlk olarak Id'ye göre azalan sırada sıralanır
-    .ThenByDescending(u => u.Price)          // Sonra Fiyat'a göre azalan sırada sıralanır
-    .ThenBy(u => u.ProductName)                  // En son UrunAdi'na göre artan sırada sıralanır
-    .ToListAsync();
+//var products = await context.Products
+//    .OrderByDescending(u => u.ProductId)            // İlk olarak Id'ye göre azalan sırada sıralanır
+//    .ThenByDescending(u => u.Price)          // Sonra Fiyat'a göre azalan sırada sıralanır
+//    .ThenBy(u => u.ProductName)                  // En son UrunAdi'na göre artan sırada sıralanır
+//    .ToListAsync();
 
 #endregion
+#region Tekil Veri Getiren Sorgulama Fonksiyonları
+// Yapılan sorgularda sadece tek bir verinin gelmesi amaçlanıyorsa Single ya da SingleOrDefault fonksiyonları kullanılabilir.
+
+#region SingleAsync
+// Eğer ki, sorgu neticesinde birden fazla veri geliyorsa ya da hiç gelmiyorsa her iki durumda da exception fırlatır.
+//var urun = await context.Urunler.SingleAsync(u => u.Id == 55);
+#endregion
+
+#region Hiç Kayıt Gelmediğinde
+// var urun = await context.Urunler.SingleAsync(u => u.Id == 5555);
+#endregion
+
+#region Çok Kayıt Geldiğinde
+// var urun = await context.Urunler.SingleAsync(u => u.Id == 55);
+#endregion
+#endregion
+
+#region SingleOrDefaultAsync
+// Eğer ki, sorgu neticesinde birden fazla veri geliyorsa exception fırlatır, hiç veri gelmiyorsa null döner.
+//var urun = await context.Urunler.SingleOrDefaultAsync(u => u.Id == 55);
+#endregion
+
+#region Hiç Kayıt Gelmediğinde
+// var urun = await context.Urunler.SingleOrDefaultAsync(u => u.Id == 5555);
+#endregion
+
+#region Çok Kayıt Geldiğinde
+// var urun = await context.Urunler.SingleOrDefaultAsync(u => u.Id == 55);
+#endregion
+#region Tekil Veri Getiren Sorgulama Fonksiyonları
+// Yapılan sorgularda sadece tek bir verinin gelmesi amaçlanıyorsa Single ya da SingleOrDefault fonksiyonları kullanılabilir.
+
+#region SingleAsync
+// Eğer ki, sorgu neticesinde birden fazla veri geliyorsa ya da hiç gelmiyorsa her iki durumda da exception fırlatır.
+// var urun = await context.Urunler.SingleAsync(u => u.Id == 55);
+#endregion
+
+#region Hiç Kayıt Gelmediğinde
+// var urun = await context.Urunler.SingleAsync(u => u.Id == 5555);
+#endregion
+
+#region Çok Kayıt Geldiğinde
+// var urun = await context.Urunler.SingleAsync(u => u.Id == 55);
+#endregion
+#endregion
+
+#region SingleOrDefaultAsync
+// Eğer ki, sorgu neticesinde birden fazla veri geliyorsa exception fırlatır, hiç veri gelmiyorsa null döner.
+// var urun = await context.Urunler.SingleOrDefaultAsync(u => u.Id == 55);
+#endregion
+
+#region Hiç Kayıt Gelmediğinde
+// var urun = await context.Urunler.SingleOrDefaultAsync(u => u.Id == 5555);
+#endregion
+
+#region Çok Kayıt Geldiğinde
+// var urun = await context.Urunler.SingleOrDefaultAsync(u => u.Id == 55);
+#endregion
+
+#region Tekil Veri Getiren Sorgulama Fonksiyonları
+// Yapılan sorgularda tek bir verinin gelmesi amaçlanıyorsa First ya da FirstOrDefault fonksiyonları kullanılabilir.
+
+#region FirstAsync
+// Sorgu neticesinde elde edilen verilerden ilkini getirir. Eğer ki hiç veri gelmiyorsa hata fırlatır.
+#region Tek Kayıt Geldiğinde
+// var urun = await context.Urunler.FirstAsync(u => u.Id == 55);
+#endregion
+
+#region Hiç Kayıt Gelmediğinde
+// var urun = await context.Urunler.FirstAsync(u => u.Id == 5555);
+#endregion
+
+#region Çok Kayıt Geldiğinde
+// var urun = await context.Urunler.FirstAsync(u => u.Id > 55);
+#endregion
+#endregion
+
+#region FirstOrDefaultAsync
+// Sorgu neticesinde elde edilen verilerden ilkini getirir. Eğer ki hiç veri gelmiyorsa null değerini döndürür.
+#endregion
+#endregion
+
+// SingleAsync, SingleOrDefaultAsync, FirstAsync, FirstOrDefaultAsync Comparison
+
+#region FindAsync
+// The Find function is a special function that allows you to query quickly using the primary key.
+// Example:
+// var product = await context.Products.FirstOrDefaultAsync(p => p.Id == 55);
+//var product = await context.Products.FindAsync(15);
+//Console.WriteLine();
+#endregion
+
+// Eksik olan #endregion'ları bu şekilde kapattığınızdan emin olun.
+
+#region LastAsync
+// Returns the last result from the query. If no record is found, it throws an exception. 
+// Using OrderBy is mandatory.
+// Example:
+// var product = await context.Products.OrderBy(u => u.Price).LastAsync(u => u.Id > 55);
+#endregion
+
+#region LastOrDefaultAsync
+// Returns the last result from the query. Using OrderBy is mandatory.
+// If no record is found, it returns null.
+#endregion
+
+#region Other Query Functions
+#region CountAsync
+#endregion
+
 
 public class ETicaretContext : DbContext
 {
     public DbSet <Product> Products { get; set; }
+    public DbSet <Part> Parts { get; set; }
+    public DbSet <ProductPart> ProductParts { get; set; }
   
     
 
@@ -314,6 +426,11 @@ public class ETicaretContext : DbContext
             optionsBuilder.UseSqlServer("Data Source=ECE\\MSSQLSERVER02; Initial Catalog=TrainingDb; Integrated Security=True; Connect Timeout=30; Encrypt=True; Trust Server Certificate=True; Application Intent=ReadWrite; Multi Subnet Failover=False");
         }
     }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ProductPart>().HasKey(up => new {up.ProductId, up.PartId });
+    }
+
 
 }
 
@@ -325,4 +442,18 @@ public class Product
     public string ProductName { get; set; } // Ürün adı için yeni özellik
     public decimal Price { get; set; }
 
+}
+public class Part
+{
+    public int PartId { get; set; }
+    public string PartName { get; set; }
+}
+
+public class ProductPart
+{
+    public int ProductId { get; set; }
+    public int PartId { get; set; }
+
+    public Product Product { get; set; }
+    public Part Part { get; set; }
 }
