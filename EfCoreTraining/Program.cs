@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Microsoft.EntityFrameworkCore;
 using System.Net.Mime;
+using System.Text.RegularExpressions;
 
 #region SaveChanges'i Verimli Kullanalım
 // SaveChanges fonksiyonu her tetiklendiğinde bir transaction oluşturacağından dolayı EF Core ile yapılan her bir
@@ -437,15 +438,38 @@ using System.Net.Mime;
 // Select fonksiyonunun işlevsel olarak birden fazla davranışı söz konusudur,
 // 1. Select fonksiyonu, generate edilecek sorgunun çekilecek kolonlarını ayarlamanızı sağlamaktadır.
 ETicaretContext context = new();
-var urunler = await context.Products.Select(u => new Product
-{
-    ProductId = u.ProductId,
-    Price = u.Price
-}).ToListAsync();
+//var urunler = await context.Products.Select(u => new Product
+//{
+//    ProductId = u.ProductId,
+//    Price = u.Price
+//}).ToListAsync();
+
+#endregion
+
+//Gruplama yapmamızı sağlayan fonksiyondur.
+
+#region Method Syntax
+//var datas = await context.Products.GroupBy(u => u.Price).Select(group => new
+//{
+//    Count = group.Count(),
+//    Price = group.Key
+//}).ToListAsync();
+#endregion
+
+//Query Syntax
+#region Foreach Fonksiyonu
+var datas = await (from product in context.Products
+                   group product by product.Price
+           into @group
+                   select new
+                   {
+                       Price = @group.Key,
+                       Count = @group.Count()
+                   }).ToListAsync();
+
 
 #endregion
 Console.WriteLine();
-
 public class ETicaretContext : DbContext
 {
     public DbSet <Product> Products { get; set; }
@@ -492,3 +516,4 @@ public class ProductPart
     public Product Product { get; set; }
     public Part Part { get; set; }
 }
+
