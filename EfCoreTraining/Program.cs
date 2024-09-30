@@ -166,8 +166,6 @@ using System.Net.Mime;
 
 // IQueryable ve IEnumerable Nedir? Basit Olarak!
 
-ETicaretContext context = new();
-
 
 
 #region IQueryable
@@ -406,10 +404,47 @@ ETicaretContext context = new();
 // If no record is found, it returns null.
 #endregion
 
-#region Other Query Functions
+#region Diğer Sorgulama Fonksiyonları
 #region CountAsync
+//Oluşturulan sorgunun execute edilmesi neticesinde kaç adet satırın elde edileceğini sayısal olarak (int) bizlere bildiren fonksiyondur.
+
+//ETicaretContext context = new();
+//var products = await context.Products.CountAsync();
+
+//using (ETicaretContext newContext = new ETicaretContext())
+//{
+//    var count = await newContext.Products.CountAsync();
+//    Console.WriteLine($"Toplam ürün sayısı: {count}");
+//}
+
+#endregion
+#endregion
+#region Sorgu Sonucu Dönüşüm Fonksiyonları
+//Bu fonksiyonlar ile sorgu neticesinde elde edilen verileri isteğimiz doğrultusunda farklı türlerde projeksiyon edebiliyoruz.
+
+#region ToDictionaryAsync
+//Sorgu neticesinde gelecek olan veriyi bir dictionary olarak elde etmek/tutmak/karşılamak istiyorsak eğer kullanılır!
+//ETicaretContext context = new();
+//var urunler = await context.Products.ToDictionaryAsync(u => u.ProductName, u => u.Price);
+
+//ToList ile aynı amaca hizmet etmektedir. Yani, oluşturulan sorguyu execute edip neticesini alırlar.
+//ToList : Gelen sorgu neticesini entity türünde bir koleksiyona (List<TEntity>) dönüştürmekteyken, 
+//ToDictionary ise : Gelen sorgu neticesini Dictionary türünden bir koleksiyona dönüştürecektir.
 #endregion
 
+#endregion
+#region Select
+// Select fonksiyonunun işlevsel olarak birden fazla davranışı söz konusudur,
+// 1. Select fonksiyonu, generate edilecek sorgunun çekilecek kolonlarını ayarlamanızı sağlamaktadır.
+ETicaretContext context = new();
+var urunler = await context.Products.Select(u => new Product
+{
+    ProductId = u.ProductId,
+    Price = u.Price
+}).ToListAsync();
+
+#endregion
+Console.WriteLine();
 
 public class ETicaretContext : DbContext
 {
